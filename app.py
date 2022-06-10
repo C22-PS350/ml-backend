@@ -33,7 +33,6 @@ def get_prediction():
         x = np.array([
             args['duration'],
             args['heart_rate'],
-            args['body_temp'],
             args['age'],
             args['weight'],
             args['gender'],
@@ -44,6 +43,7 @@ def get_prediction():
         x = np.array([
             args['duration'],
             args['heart_rate'],
+            args['body_temp'],
             args['age'],
             args['weight'],
             args['gender'],
