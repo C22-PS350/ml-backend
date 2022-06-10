@@ -1,7 +1,8 @@
 from flask import Flask
 from flask_restful import reqparse
-from keras.models import load_model
 import numpy as np
+import tensorflow as tf
+from sklearn.preprocessing import StandardScaler
 
 app = Flask(__name__)
 
@@ -27,25 +28,35 @@ def get_prediction():
     args = prediction_args.parse_args()
     model = None
 
-    if not args['heart_rate'] or not args['body_temp']:
-        # load model kedua
-        # model = load_model('path-ke-model-tanpa-bodytemp-heartrate')
-        pass
+    if not args['body_temp']:
+        model = tf.keras.models.load_model('./model/model_6.h5')
+        x = np.array([
+            args['duration'],
+            args['heart_rate'],
+            args['body_temp'],
+            args['age'],
+            args['weight'],
+            args['gender'],
+            args['height'],
+        ])
+    else:
+        model = tf.keras.models.load_model('./model/model_7.h5')
+        x = np.array([
+            args['duration'],
+            args['heart_rate'],
+            args['age'],
+            args['weight'],
+            args['gender'],
+            args['height'],
+        ])
 
-    model = load_model('./model/model1.h5')
-    x = np.array([
-        args['gender'],
-        args['age'],
-        args['weight'],
-        args['height'],
-        args['duration'],
-        args['heart_rate'],
-        args['body_temp'],
-    ])
-    # try:
-    res = model.predict(x)
-    # except ValueError:
-    #     return {'error': 'value error exception'}, 400
+    try:
+        scaler = StandardScaler()
+        x = scaler.fit_transform(x.reshape(-1,1))
+        pred = model.predict(np.array([x,]))
+        res = pred.flat[0]
+    except ValueError:
+        return {'error': 'value error exception'}, 400
 
     return {
         'result': res
