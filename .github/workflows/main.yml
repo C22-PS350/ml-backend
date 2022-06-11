@@ -1,0 +1,22 @@
+name: Deploy to App Engine
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy-service:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: GCP auth
+      id: auth
+      uses: google-github-actions/auth@v0
+      with:
+        credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+    - name: Deploy to App Engine
+      id: deploy
+      uses: google-github-actions/deploy-appengine@v0

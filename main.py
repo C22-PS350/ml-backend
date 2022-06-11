@@ -18,7 +18,7 @@ prediction_args.add_argument(
 prediction_args.add_argument(
     'duration', type=float, help='request body \'duration\' is required', required=True)
 prediction_args.add_argument(
-    'heart_rate', type=float)
+    'heart_rate', type=float, help='request body \'heart_rate\' is required', required=True)
 prediction_args.add_argument(
     'body_temp', type=float)
 
@@ -52,16 +52,18 @@ def get_prediction():
 
     try:
         scaler = StandardScaler()
-        x = scaler.fit_transform(x.reshape(-1,1))
-        pred = model.predict(np.array([x,]))
+        x = scaler.fit_transform(x.reshape(-1, 1))
+        pred = model.predict(np.array([x, ]))
         res = pred.flat[0]
     except ValueError:
-        return {'error': 'value error exception'}, 400
+        return {
+            'error': 'value error exception'
+        }, 500
 
     return {
-        'result': res
+        'calories': res.item()
     }
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
