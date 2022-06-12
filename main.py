@@ -36,7 +36,7 @@ def get_prediction():
             args['age'],
             args['weight'],
             args['gender'],
-            args['height'],
+            args['height']
         ])
     else:
         model = tf.keras.models.load_model('./model/model_7.h5')
@@ -47,7 +47,7 @@ def get_prediction():
             args['age'],
             args['weight'],
             args['gender'],
-            args['height'],
+            args['height']
         ])
 
     try:
